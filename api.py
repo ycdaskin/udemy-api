@@ -9,7 +9,7 @@ def test():
     return make_response(jsonify(
         data={
             "message": "First trial with Flask on Heroku",
-            "deployed_by": "Cagri",
+            "deployed_by": "Cagri Daskin",
             "status": "200 OK"
         }
     ), 200)
