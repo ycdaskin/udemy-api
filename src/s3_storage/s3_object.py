@@ -4,11 +4,12 @@ from flask import make_response, jsonify, request
 from flask_restful import Resource
 from src.s3_storage.s3_utils import *
 from src.auth.auth import token_required
-from werkzeug.utils import secure_filename
+import os
 import boto3
 import requests
 
-
+AWS_ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY")
+AWS_SECRET_KEY = os.environ.get("AWS_SECRET_KEY")
 
 class S3(Resource):
 
@@ -26,8 +27,8 @@ class S3(Resource):
 
             s3 = boto3.client(
                 "s3",
-                aws_access_key_id="AKIA5CHGUKFPBI5XIJOX",
-                aws_secret_access_key="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",
+                aws_access_key_id=AWS_ACCESS_KEY,
+                aws_secret_access_key=AWS_SECRET_KEY,
                 region_name="eu-central-1"
             )
 

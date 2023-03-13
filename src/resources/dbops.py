@@ -85,7 +85,7 @@ pictures = [
 
 pool = p.ThreadedConnectionPool(
     2,
-    20,
+    5,
     host='ec2-54-73-22-169.eu-west-1.compute.amazonaws.com',
     database='dbm5rut493hudn',
     user='rmgicawsisxtnu',
