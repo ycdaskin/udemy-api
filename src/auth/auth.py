@@ -14,10 +14,10 @@ crypto = Crypto()
 pool = p.ThreadedConnectionPool(
     5,
     20,
-    host='localhost',
-    database='pacs',
-    user='postgres',
-    password="1",
+    host='ec2-54-73-22-169.eu-west-1.compute.amazonaws.com',
+    database='dbm5rut493hudn',
+    user='rmgicawsisxtnu',
+    password="475be76867cdbaf3edd0ba958b34ada8fe238d49079893a5f6e6c41716702346",
     port=5432,
     options="-c search_path=dbo,auth"
 )
