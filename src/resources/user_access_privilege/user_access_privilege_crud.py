@@ -5,7 +5,7 @@ from src.auth.auth import is_super_user
 def get_user_access_privs():
     with get_connection() as conn:
         cur = conn.cursor()
-        request_user, company, super_admin = is_super_user()
+        request_user, company, super_admin = is_super_user(cur=cur)
         if super_admin:
             sql = '''select uap.*, u.name || ' ' || u.last_name as user_name, u.avatar, g.name as gate_name, 
                          g.id as gate_id, b.name as building_name 

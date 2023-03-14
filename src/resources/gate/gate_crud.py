@@ -8,7 +8,7 @@ from src.auth.auth import is_super_user
 def get_gates(id=None):
     with get_connection() as conn:
         cur = conn.cursor()
-        request_user, company, super_admin = is_super_user()
+        request_user, company, super_admin = is_super_user(cur=cur)
         if super_admin:
             sql = '''with gt as (
             select g.*, b.company as company_id, b.name as building_name from gate g 
@@ -33,7 +33,7 @@ def get_gates(id=None):
             select gt.*, c.name as company_name from gt
             left join company c on c.id = gt.company_id 
             where gt.company_id = %s
-            ''' if id is not None else \
+            ''' if id is None else \
             '''with gt as (
             select g.*, b.company as company_id, b.name as building_name from gate g 
             left join building b on b.id = g.building

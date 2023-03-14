@@ -5,7 +5,7 @@ from src.auth.auth import is_super_user
 def get_user_roles_by_company(company_id=None):
     with get_connection() as conn:
         cur = conn.cursor()
-        request_user, company, super_admin = is_super_user()
+        request_user, company, super_admin = is_super_user(cur=cur)
         if super_admin:
             sql = ''' select * from app_user_role where company = %s''' \
                 if company_id is not None else '''select * from app_user_role'''
@@ -20,7 +20,7 @@ def get_user_roles_by_company(company_id=None):
 def get_user_role(id=None):
     with get_connection() as conn:
         cur = conn.cursor()
-        request_user, company, super_admin = is_super_user()
+        request_user, company, super_admin = is_super_user(cur=cur)
         if super_admin:
             sql = ''' select * from app_user_role where id = %s''' \
                 if id is not None else '''select * from app_user_role'''

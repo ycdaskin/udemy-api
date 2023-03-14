@@ -17,7 +17,7 @@ def update_company(data, id):
 def get_companies(id=None):
     with get_connection() as conn:
         cur = conn.cursor()
-        request_user, company, super_admin = is_super_user()
+        request_user, company, super_admin = is_super_user(cur=cur)
         if super_admin:
             sql = "select * from company where id = %s" if id else "select * from company"
             params = (id,) if id else ()

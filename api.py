@@ -16,6 +16,9 @@ from src.resources.building.building_object import BuildingCollection, BuildingB
 from src.resources.gate.gate_object import GateItem, GateCollection, GateBatch, GateDetails
 from src.resources.access_point.access_point_object import AccessPointBatch, AccessPointItem, AccessPointCollection
 from src.resources.user_access_privilege.user_access_privilege_object import UserAccessCollection, UserAccessByGate, UserAccessByGateBatch
+from src.resources.access_control.user_activity.user_activity_object import UserActivityBatch, UserActivityCollection, UserActivityItem, UserActivityByUser
+from src.resources.access_control.qr_scan.qr_scan_object import QrScan
+
 
 from flask_restful import Api
 from flask_cors import CORS
@@ -80,8 +83,15 @@ api.add_resource(UserAccessCollection, "/api/access_privs")
 api.add_resource(UserAccessByGate, "/api/gate_privs")
 api.add_resource(UserAccessByGateBatch, "/api/gate_privs/batch")
 
+api.add_resource(UserActivityCollection, "/api/user_activities")
+api.add_resource(UserActivityItem, "/api/user_activities/<id>")
+api.add_resource(UserActivityBatch, "/api/user_activities/batch")
+api.add_resource(UserActivityByUser, "/api/user_activities/user/<user_id>")
+
+api.add_resource(QrScan, "/api/qr_scan")
 
 api.add_resource(S3, "/api/upload_file")
+
 
 @app.route('/api/test')
 def test():

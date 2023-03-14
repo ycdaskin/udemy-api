@@ -94,18 +94,23 @@ def verification_code_valid(req):
         return True
 
 
-def is_super_user():
+def is_super_user(cur=None):
     auth = request.headers.get("Authorization")
     token = auth.split(" ")[1]
     user, company = get_user_and_company(token)
-    with get_connection() as conn:
-        cur = conn.cursor()
-        sql = '''select * from data.user_privileges up 
-        left join data.privileges p
-        on up.privilege = p.id
-        where p.name = 'superAdmin' and up.user_id = %s '''
+    sql = '''select * from data.user_privileges up 
+            left join data.privileges p
+            on up.privilege = p.id
+            where p.name = 'superAdmin' and up.user_id = %s '''
+    if cur is None:
+        with get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute(sql, (user,))
+            return user, company, len(cur.fetchall()) > 0
+    else:
         cur.execute(sql, (user,))
         return user, company, len(cur.fetchall()) > 0
+
 
 
 

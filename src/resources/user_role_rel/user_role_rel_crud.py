@@ -44,7 +44,7 @@ def get_user_role_rel_details():
     try:
         with get_connection() as conn:
             cur = conn.cursor()
-            request_user, company, super_admin = is_super_user()
+            request_user, company, super_admin = is_super_user(cur=cur)
             if super_admin:
                 sql = '''select urr.*, aur.name as role_name, aur.description as role_description,
                         au.name || ' ' || au.last_name as user_name, au.avatar

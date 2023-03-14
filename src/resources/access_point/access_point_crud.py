@@ -6,24 +6,37 @@ from src.auth.auth import is_super_user
 def get_access_points(id=None):
     with get_connection() as conn:
         cur = conn.cursor()
-        request_user, company, super_admin = is_super_user()
+        request_user, company, super_admin = is_super_user(cur=cur)
         if super_admin:
-            sql = '''select ap.*, g.id as gate_id, g.name as gate_name, c.name as company_name from access_point ap 
+            sql = '''select ap.id, g.id as gate_id, g.name as gate_name, c.name as company_name, 
+                b.name as building_name, g.direction
+            from access_point ap 
             left join gate g on g.id = ap.gate
-            left join company c on c.id = ap.company''' \
+            left join company c on c.id = ap.company
+            left join building b on b.id = g.building
+            ''' \
             if id is None else \
-                '''select ap.*, g.id as gate_id, g.name as gate_name, c.name as company_name from access_point ap 
+                '''select ap.id, g.id as gate_id, g.name as gate_name, c.name as company_name,
+                    b.name as building_name, g.direction
+                from access_point ap 
                 left join gate g on g.id = ap.gate 
-                left join company c on c.id = ap.company where ap.id = %s'''
+                left join company c on c.id = ap.company 
+                left join building b on b.id = g.building where ap.id = %s'''
             params = (id,) if id else ()
         else:
-            sql = '''select ap.*, g.id as gate_id, g.name as gate_name, c.name as company_name from access_point ap 
+            sql = '''select ap.id, g.id as gate_id, g.name as gate_name, c.name as company_name, 
+                b.name as building_name, g.direction
+            from access_point ap 
             left join gate g on g.id = ap.gate 
-            left join company c on c.id = ap.company where ap.id = %s and gate.company = %s''' \
+            left join company c on c.id = ap.company
+            left join building b on b.id = g.building where ap.id = %s and gate.company = %s''' \
             if id is not None else \
-                '''select ap.*, g.id as gate_id, g.name as gate_name, c.name as company_name from access_point ap 
+                '''select ap.id, g.id as gate_id, g.name as gate_name, c.name as company_name, 
+                    b.name as building_name, g.direction
+                from access_point ap 
                 left join gate g on g.id = ap.gate
-                left join company c on c.id = ap.company where gate.company = %s'''
+                left join company c on c.id = ap.company
+                left join building b on b.id = g.building where gate.company = %s'''
             params = (id, company,) if id else (company,)
         data = query_db(cur, sql, params)
         return data
@@ -77,3 +90,16 @@ def delete_access_points(ids):
             cur.execute(sql, (tuple(ids),))
     except Exception as ex:
         raise Exception(f"Error while deleting access points: {str(ex.args[0])}")
+
+
+def get_access_points_by_user(user_id):
+    with get_connection() as conn:
+        cur = conn.cursor()
+        _, company, _ = is_super_user(cur=cur)
+        sql = '''select ap.id as access_point_id, g.id as gate_id, g.direction, uap.user_id as user_id
+        from data.access_point ap
+        left join data.gate g on ap.gate = g.id 
+        left join data.user_access_privs uap on uap.access_point_id = ap.id
+        where uap.user_id = %s and ap.company = %s '''
+        data = query_db(cur, sql, (user_id, company,))
+        return data

@@ -17,7 +17,7 @@ def update_user(data, id):
 def get_users(id=None):
     with get_connection() as conn:
         cur = conn.cursor()
-        request_user, company, super_admin = is_super_user()
+        request_user, company, super_admin = is_super_user(cur=cur)
         if super_admin:
             sql = '''select u.id, u.name, last_name, user_name, company, u.phone, u.email, u.address, chief,
             u.is_active, avatar, id_number, u.area_code, c.name company_name from app_user u
